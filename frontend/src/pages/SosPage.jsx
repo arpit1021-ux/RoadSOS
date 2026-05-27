@@ -1,3 +1,5 @@
+
+import EmergencyMap from '../components/EmergencyMap';
 import { useState, useEffect } from 'react';
 
 export default function SosPage() {
@@ -5,10 +7,41 @@ export default function SosPage() {
   const [services, setServices] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const routePoints = [
+  [29.548, 75.270],
+  [29.545, 75.267],
+  [29.542, 75.264],
+  [29.539, 75.261],
+  [29.536, 75.258],
+  [29.533, 75.255],
+];
+
+const [routeIndex, setRouteIndex] = useState(0);
+
+const [ambulanceLocation, setAmbulanceLocation] = useState(
+  routePoints[0]
+);
 
   useEffect(() => {
     triggerSOS();
   }, []);
+  useEffect(() => {
+  const interval = setInterval(() => {
+    setRouteIndex((prev) => {
+      if (prev < routePoints.length - 1) {
+        const nextIndex = prev + 1;
+
+        setAmbulanceLocation(routePoints[nextIndex]);
+
+        return nextIndex;
+      }
+
+      return prev;
+    });
+  }, 2000);
+
+  return () => clearInterval(interval);
+}, []);
 
   const triggerSOS = async () => {
     setLoading(true);
@@ -21,29 +54,29 @@ export default function SosPage() {
     }
 
     navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-        setLocation(loc);
-        
-        // Fetch nearby services
-        try {
-          const res = await fetch(`${import.meta.env.VITE_API_URL}/api/emergency/sos`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ location: { type: 'Point', coordinates: [loc.lng, loc.lat] } })
-          });
-          const data = await res.json();
-          setServices(data.services);
-        } catch (err) {
-          // Use dummy data if API fails
-          setServices(getDummyServices());
-        }
-        setLoading(false);
-        
-        // Save to localStorage for offline
-        localStorage.setItem('lastLocation', JSON.stringify(loc));
-        localStorage.setItem('lastSOS', Date.now().toString());
-      },
+  async (pos) => {
+    const loc = {
+      lat: pos.coords.latitude,
+      lng: pos.coords.longitude,
+    };
+
+    setLocation(loc);
+
+    setTimeout(() => {
+      setServices(getDummyServices());
+      setLoading(false);
+    }, 2000);
+
+    localStorage.setItem(
+      'lastLocation',
+      JSON.stringify(loc)
+    );
+
+    localStorage.setItem(
+      'lastSOS',
+      Date.now().toString()
+    );
+  },
       (err) => {
         setError('Location access denied. Please enable location services.');
         setLoading(false);
@@ -126,6 +159,28 @@ export default function SosPage() {
           <ServiceSection title="🚑 Ambulances" services={services.ambulances} />
           <ServiceSection title="🚓 Police" services={services.police} />
           <ServiceSection title="🚛 Towing" services={services.towing} />
+          <div className="glass-card p-6 mb-6 text-center rounded-2xl border border-red-500/30 bg-red-500/10">
+
+  <h2 className="text-3xl font-bold text-red-500 animate-pulse">
+    🚑 Ambulance Arriving
+  </h2>
+
+  <p className="text-5xl font-extrabold text-white mt-4">
+    5 mins
+  </p>
+
+  <p className="text-gray-300 mt-2">
+    Emergency responders are on the way
+  </p>
+
+</div>
+          {location && (
+            
+  <EmergencyMap
+    userLocation={[location.lat, location.lng]}
+    ambulanceLocation={ambulanceLocation}
+  />
+)}
         </>
       )}
     </div>
@@ -152,3 +207,4 @@ function ServiceSection({ title, services }) {
     </div>
   );
 }
+

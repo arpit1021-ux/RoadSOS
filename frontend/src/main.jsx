@@ -9,6 +9,7 @@ import NearbyServices from './pages/NearbyServices';
 import ReportAccident from './pages/ReportAccident';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
+import 'leaflet/dist/leaflet.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter>
