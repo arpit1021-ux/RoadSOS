@@ -21,6 +21,9 @@ const [routeIndex, setRouteIndex] = useState(0);
 const [ambulanceLocation, setAmbulanceLocation] = useState(
   routePoints[0]
 );
+const [timeline, setTimeline] = useState([
+  "🚨 SOS Activated",
+]);
 
   useEffect(() => {
     triggerSOS();
@@ -41,6 +44,27 @@ const [ambulanceLocation, setAmbulanceLocation] = useState(
   }, 2000);
 
   return () => clearInterval(interval);
+}, []);
+useEffect(() => {
+
+  const events = [
+    "📍 Location Acquired",
+    "🚑 Ambulance Assigned",
+    "🏥 Trauma Center Alerted",
+    "👮 Police Notified",
+    "🚨 Ambulance En Route",
+  ];
+
+  events.forEach((event, index) => {
+
+    setTimeout(() => {
+
+      setTimeline((prev) => [...prev, event]);
+
+    }, (index + 1) * 3000);
+
+  });
+
 }, []);
 
   const triggerSOS = async () => {
@@ -172,6 +196,42 @@ const [ambulanceLocation, setAmbulanceLocation] = useState(
   <p className="text-gray-300 mt-2">
     Emergency responders are on the way
   </p>
+
+</div>
+<div className="glass rounded-3xl p-6 mt-6">
+
+  <h2 className="text-2xl font-bold text-emergency mb-6">
+    🕒 Emergency Timeline
+  </h2>
+
+  <div className="space-y-4">
+
+    {timeline.map((event, index) => (
+
+      <div
+        key={index}
+        className="flex items-center gap-4 border-l-2 border-red-500 pl-4 py-2 animate-fadeIn"
+      >
+
+        <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+
+        <div>
+
+          <p className="text-white font-medium">
+            {event}
+          </p>
+
+          <p className="text-sm text-gray-400">
+            {new Date().toLocaleTimeString()}
+          </p>
+
+        </div>
+
+      </div>
+
+    ))}
+
+  </div>
 
 </div>
           {location && (
