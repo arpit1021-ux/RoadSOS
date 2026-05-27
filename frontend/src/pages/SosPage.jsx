@@ -24,6 +24,7 @@ const [ambulanceLocation, setAmbulanceLocation] = useState(
 const [timeline, setTimeline] = useState([
   "🚨 SOS Activated",
 ]);
+const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
     triggerSOS();
@@ -62,6 +63,34 @@ useEffect(() => {
       setTimeline((prev) => [...prev, event]);
 
     }, (index + 1) * 3000);
+
+  });
+
+}, []);
+useEffect(() => {
+
+  const alerts = [
+    "🚑 Ambulance dispatched",
+    "🏥 Trauma center notified",
+    "👮 Police alerted",
+    "📡 GPS tracking active",
+  ];
+
+  alerts.forEach((alert, index) => {
+
+    setTimeout(() => {
+
+      setNotifications((prev) => [...prev, alert]);
+
+      setTimeout(() => {
+
+        setNotifications((prev) =>
+          prev.filter((item) => item !== alert)
+        );
+
+      }, 4000);
+
+    }, index * 5000);
 
   });
 
@@ -161,7 +190,22 @@ useEffect(() => {
   }
 
   return (
+    
     <div className="min-h-screen p-4 pb-20">
+      <div className="fixed top-24 right-6 z-[9999] space-y-4">
+
+  {notifications.map((note, index) => (
+
+    <div
+      key={index}
+      className="bg-red-500/90 text-white px-6 py-4 rounded-2xl shadow-2xl animate-bounce backdrop-blur-md"
+    >
+      {note}
+    </div>
+
+  ))}
+
+</div>
       <div className="glass rounded-3xl p-6 mb-6 text-center">
         <h1 className="text-3xl font-bold text-emergency mb-2">🚨 SOS ACTIVATED</h1>
         <p className="text-gray-300">Help is on the way!</p>
