@@ -16,7 +16,7 @@
 
 ---
 
-> Built for hackathon. Designed for real life.
+> Built a solution. Designed for real life.
 
 </div>
 
@@ -257,13 +257,13 @@ git push origin feature/your-feature
 
 ## 👥 Team
 
-Built with ❤️ at [Hackathon Name] by **Team RoadSoS**
+Built with ❤️ at Road Safety Hackathon 2026 by **Team CodeRed**
 
 ---
 
 ## 📄 License
 
-MIT © 2025 RoadSoS AI Team
+MIT © 2025 CodeRed AI Team
 
 ---
 
