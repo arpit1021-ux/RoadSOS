@@ -12,11 +12,11 @@ import { useNavigate } from 'react-router-dom';
 // ];
 
 const TIMELINE_EVENTS = [
-  { icon: '📍', label: 'Location Acquired',     delay: 1200 },
-  { icon: '🚑', label: 'Ambulance Assigned',    delay: 4000 },
+  { icon: '📍', label: 'Location Acquired', delay: 1200 },
+  { icon: '🚑', label: 'Ambulance Assigned', delay: 4000 },
   { icon: '🏥', label: 'Trauma Center Alerted', delay: 7000 },
-  { icon: '👮', label: 'Police Notified',        delay: 10000 },
-  { icon: '🛣️', label: 'Ambulance En Route',    delay: 13000 },
+  { icon: '👮', label: 'Police Notified', delay: 10000 },
+  { icon: '🛣️', label: 'Ambulance En Route', delay: 13000 },
 ];
 
 const TRIAGE_MAP = {
@@ -71,6 +71,7 @@ export default function SosPage() {
   const [services, setServices] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  
 
   const [routeIndex, setRouteIndex] = useState(0);
   //const [ambulanceLocation, setAmbulanceLocation] = useState(ROUTE_POINTS[0]);
@@ -86,6 +87,8 @@ export default function SosPage() {
   const [incidentText, setIncidentText] = useState('');
   const [triageResult, setTriageResult] = useState(null);
   const [triageOpen, setTriageOpen] = useState(false);
+  const [arrived, setArrived] = useState(false);
+const [transporting, setTransporting] = useState(false);
 
   // ── SOS trigger ──────────────────────────────────────────────────────────
   useEffect(() => { triggerSOS(); }, []);
@@ -256,6 +259,25 @@ export default function SosPage() {
                   location.lat - 0.02,
                   location.lng - 0.02,
                 ]}
+                arrived={arrived}
+                setArrived={setArrived}
+                transporting={transporting}
+                setTransporting={setTransporting}
+                onArrival={() => {
+    setTimeline(prev => [
+      ...prev,
+      {
+        icon: "✅",
+        label: "Ambulance Arrived",
+        time: new Date().toLocaleTimeString(),
+      },
+      {
+        icon: "🏥",
+        label: "Transporting to Trauma Center",
+        time: new Date().toLocaleTimeString(),
+      },
+    ]);
+  }}
               />
               <div style={styles.mapOverlayBadge}>
                 <span style={styles.mapPulse} />

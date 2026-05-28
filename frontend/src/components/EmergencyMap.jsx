@@ -22,12 +22,20 @@ const ambulanceIcon = new L.Icon({
   iconSize: [40, 40],
 });
 
-export default function EmergencyMap({ userLocation, ambulanceLocation }) {
+export default function EmergencyMap({
+  userLocation,
+  ambulanceLocation,
+  onArrival,
+  arrived,
+  setArrived,
+  transporting,
+  setTransporting,
+}) {
   const [route, setRoute]                       = useState([]);
   const [currentPosition, setCurrentPosition]   = useState(ambulanceLocation); // FIX 5: fallback to prop
   const [currentRouteIndex, setCurrentRouteIndex] = useState(0);
   const [eta, setEta]                           = useState(5);
-  const [arrived, setArrived]                   = useState(false);
+  
 
   // ── Fetch real road route ────────────────────────────────────────────────
   useEffect(() => {
@@ -88,29 +96,54 @@ smoothRoute.push(coordinates[coordinates.length - 1]);
         clearInterval(interval);
         setArrived(true); // FIX 3: mark arrived
         setEta(0);
+        if (onArrival) {
+  onArrival();
+}
+        setTimeout(() => {
+    setTransporting(true);
+  }, 3000);
       }
+      
     }, 400);
 
     return () => clearInterval(interval);
-  }, [route]);
+  }, [route,currentRouteIndex]);
 
   return (
     <div className="mt-8 rounded-3xl overflow-hidden border border-white/10">
 
       {/* FIX 3: arrived banner */}
-      {arrived && (
-        <div style={{
-          background: '#16a34a',
-          color: '#fff',
-          textAlign: 'center',
-          padding: '10px',
-          fontWeight: 700,
-          fontSize: 14,
-          letterSpacing: '0.05em',
-        }}>
-          🚑 AMBULANCE ARRIVED
-        </div>
-      )}
+      {arrived && !transporting && (
+  <div
+    style={{
+      background: "#16a34a",
+      color: "#fff",
+      textAlign: "center",
+      padding: "10px",
+      fontWeight: 700,
+      fontSize: 14,
+      letterSpacing: "0.05em",
+    }}
+  >
+    ✅ PATIENT STABILIZED
+  </div>
+)}
+
+{transporting && (
+  <div
+    style={{
+      background: "#2563eb",
+      color: "#fff",
+      textAlign: "center",
+      padding: "10px",
+      fontWeight: 700,
+      fontSize: 14,
+      letterSpacing: "0.05em",
+    }}
+  >
+    🏥 TRANSPORTING TO TRAUMA CENTER
+  </div>
+)}
 
       {/* FIX 1: live ETA badge above map */}
       {!arrived && (

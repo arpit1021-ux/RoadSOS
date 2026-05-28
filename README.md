@@ -40,7 +40,6 @@ Every minute counts in a road accident. Yet most people panic, waste precious ti
 | 🧠 **AI Triage Assistant** | Describes the situation in natural language and gets immediate first-aid guidance |
 | 📊 **Severity Scoring** | Real-time 0–100 severity score based on accident type, injuries, weather, and time |
 | 🗺️ **Dispatch Visualization** | Animated map showing emergency service routing from dispatch to accident site |
-| 🔴 **Incident Heatmap** | Live map overlay showing recent reported accidents in your area |
 | 📡 **Offline Mode** | Critical numbers and last-known services cached via localStorage — works without internet |
 | 🔐 **Optional Login** | Save blood group, medical notes, and emergency contacts for faster future alerts |
 | 📱 **Mobile-First UI** | Large accessible buttons, glassmorphism design — optimized for panic situations |
